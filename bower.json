@@ -1,0 +1,24 @@
+{
+  "name": "vue-essentials",
+  "homepage": "https://github.com/EveryWell/vue-essentials",
+  "authors": [
+    "EveryWell <aneverywell@gmail.com>"
+  ],
+  "description": "Some VueJS essential elements.",
+  "main": "dist/vue-essentials.js",
+  "moduleType": [],
+  "keywords": [
+    "vue",
+    "vuejs",
+    "essentials",
+    "directives"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
