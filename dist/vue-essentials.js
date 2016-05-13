@@ -15,8 +15,9 @@ require('../directives/timepicker');
 require('../directives/slider');
 require('../directives/dirty-form');
 require('../directives/validate');
+require('../directives/fileupload');
 
-},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/geocomplete":9,"../directives/numeric":10,"../directives/select":11,"../directives/selectize":12,"../directives/slider":13,"../directives/timepicker":14,"../directives/tooltip":15,"../directives/validate":16}],2:[function(require,module,exports){
+},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/geocomplete":10,"../directives/numeric":11,"../directives/select":12,"../directives/selectize":13,"../directives/slider":14,"../directives/timepicker":15,"../directives/tooltip":16,"../directives/validate":17}],2:[function(require,module,exports){
 
 Vue.directive('autocomplete', {
     priority: 1000,
@@ -273,6 +274,53 @@ Vue.directive('editor', {
 
 },{}],9:[function(require,module,exports){
 
+Vue.directive('fileupload', {
+    priority: 1000,
+
+    params: ['url', 'done', 'add', 'progressall', 'fail', 'send'],
+
+    bind: function () {
+
+        var settings = {
+            dataType: 'json',
+            autoUpload: false,
+            replaceFileInput:false
+        };
+
+        if (this.params.url) {
+            settings.url = this.params.url;
+        }
+
+        if (this.params.add ) {
+            settings.add = this.params.add;
+        }
+
+        if (this.params.done) {
+            settings.done = this.params.done;
+        }
+
+        if (this.params.fail) {
+            settings.fail = this.params.fail;
+        }
+
+        if (this.params.send) {
+            settings.send = this.params.send;
+        }
+
+        if (this.params.progressall) {
+            settings.progressall = this.params.progressall;
+        }
+
+        $(this.el).fileupload(settings);
+
+    },
+    unbind: function () {
+        $(this.el).off().fileupload('destroy');
+    }
+});
+
+},{}],10:[function(require,module,exports){
+
 Vue.directive('geocomplete', {
     priority: 1000,
 
@@ -306,7 +354,7 @@ Vue.directive('geocomplete', {
     }
 });
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 Vue.directive('numeric', {
     priority: 1000,
@@ -319,7 +367,7 @@ Vue.directive('numeric', {
     }
 });
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 Vue.directive('select', {
     twoWay: true,
@@ -418,7 +466,7 @@ Vue.directive('select', {
         $(this.el).off().select2('destroy')
     }
 });
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 Vue.directive('selectize', {
     twoWay: true,
@@ -500,7 +548,7 @@ Vue.directive('selectize', {
         this.el.selectize.destroy();
     }
 });
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 Vue.directive('slider', {
     twoWay: true,
@@ -539,7 +587,7 @@ Vue.directive('slider', {
     }
 });
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 Vue.directive('timepicker', {
     priority: 1000,
@@ -564,7 +612,7 @@ Vue.directive('timepicker', {
     }
 });
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 Vue.directive('tooltip', {
     priority: 500,
@@ -586,7 +634,7 @@ Vue.directive('tooltip', {
     }
 });
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 Vue.directive('validate', {
     priority: 1000,
