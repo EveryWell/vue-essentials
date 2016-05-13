@@ -13,8 +13,10 @@ require('../directives/editor');
 require('../directives/selectize');
 require('../directives/timepicker');
 require('../directives/slider');
+require('../directives/dirty-form');
+require('../directives/validate');
 
-},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dropzone":6,"../directives/editor":7,"../directives/geocomplete":8,"../directives/numeric":9,"../directives/select":10,"../directives/selectize":11,"../directives/slider":12,"../directives/timepicker":13,"../directives/tooltip":14,"../directives/validate":15}],2:[function(require,module,exports){
+},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/geocomplete":9,"../directives/numeric":10,"../directives/select":11,"../directives/selectize":12,"../directives/slider":13,"../directives/timepicker":14,"../directives/tooltip":15,"../directives/validate":16}],2:[function(require,module,exports){
 
 Vue.directive('autocomplete', {
     priority: 1000,
@@ -48,28 +50,34 @@ Vue.directive('bootstraptable', {
 
         var _self = this;
 
+        var settings = {
+            pagination: this.params.pagination === false ? false : true,
+            pageSize: this.params.pageSize ? this.params.pageSize : 20,
+            pageList: [],
+            cookie: true,
+            cookieExpire: '24h',
+            queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
+            rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
+            detailFormatter: this.params.detailFormatter ? this.params.detailFormatter : function (index, row) { return ''; },
+            locale: 'it-IT',
+            icons: {
+                paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
+                paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
+                refresh: 'glyphicon-refresh icon-refresh',
+                toggle: 'glyphicon-list-alt icon-list-alt',
+                columns: 'glyphicon-th icon-th',
+                detailOpen: 'fa fa-plus fa-lg',
+                detailClose: 'fa fa-minus fa-lg'
+            }
+        };
+
+        if (this.params.columns) {
+            settings.columns = this.params.columns;
+        }
+
         $(this.el)
-            .bootstrapTable({
-                columns: this.params.columns ? this.params.columns : {},
-                pagination: this.params.pagination === false ? false : true,
-                pageSize: this.params.pageSize ? this.params.pageSize : 20,
-                pageList: [],
-                cookie: true,
-                cookieExpire: '24h',
-                queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
-                rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
-                detailFormatter: this.params.detailFormatter ? this.params.detailFormatter : function (index, row) { return ''; },
-                locale: 'it-IT',
-                icons: {
-                    paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
-                    paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
-                    refresh: 'glyphicon-refresh icon-refresh',
-                    toggle: 'glyphicon-list-alt icon-list-alt',
-                    columns: 'glyphicon-th icon-th',
-                    detailOpen: 'fa fa-plus fa-lg',
-                    detailClose: 'fa fa-minus fa-lg'
-                }
-            }).on('load-success.bs.table', function (e, data) {
+            .bootstrapTable(settings)
+            .on('load-success.bs.table', function (e, data) {
                 _self.recompile();
             }).on('post-body.bs.table', function (e, data) {
                 _self.recompile();
@@ -197,6 +205,22 @@ Vue.directive('datepicker', {
 
 },{}],6:[function(require,module,exports){
 
+Vue.directive('dirty-form', {
+    priority: 1000,
+
+    bind: function () {
+
+        $(this.el).areYouSure({
+            'message': 'Non hai salvato le tue modifiche. Sei sicuro di voler lasciare la pagina?'
+        });
+
+    },
+    unbind: function () {
+    }
+});
+
+},{}],7:[function(require,module,exports){
+
 Vue.directive('dropzone', {
     priority: 1000,
 
@@ -222,7 +246,7 @@ Vue.directive('dropzone', {
     }
 });
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 Vue.directive('editor', {
     twoWay: true,
@@ -247,7 +271,7 @@ Vue.directive('editor', {
     }
 });
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 Vue.directive('geocomplete', {
     priority: 1000,
@@ -282,7 +306,7 @@ Vue.directive('geocomplete', {
     }
 });
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 Vue.directive('numeric', {
     priority: 1000,
@@ -295,7 +319,7 @@ Vue.directive('numeric', {
     }
 });
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 Vue.directive('select', {
     twoWay: true,
@@ -394,7 +418,7 @@ Vue.directive('select', {
         $(this.el).off().select2('destroy')
     }
 });
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 Vue.directive('selectize', {
     twoWay: true,
@@ -476,7 +500,7 @@ Vue.directive('selectize', {
         this.el.selectize.destroy();
     }
 });
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 
 Vue.directive('slider', {
     twoWay: true,
@@ -515,7 +539,7 @@ Vue.directive('slider', {
     }
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 Vue.directive('timepicker', {
     priority: 1000,
@@ -540,7 +564,7 @@ Vue.directive('timepicker', {
     }
 });
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 Vue.directive('tooltip', {
     priority: 500,
@@ -562,7 +586,7 @@ Vue.directive('tooltip', {
     }
 });
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 Vue.directive('validate', {
     priority: 1000,
