@@ -1,0 +1,1 @@
+browserify src/browserify/include-all.js -o dist/vue-essentials.js
