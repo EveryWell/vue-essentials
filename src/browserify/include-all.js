@@ -12,3 +12,5 @@ require('../directives/editor');
 require('../directives/selectize');
 require('../directives/timepicker');
 require('../directives/slider');
+require('../directives/dirty-form');
+require('../directives/validate');

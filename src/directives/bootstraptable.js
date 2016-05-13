@@ -10,7 +10,7 @@ Vue.directive('bootstraptable', {
 
         $(this.el)
             .bootstrapTable({
-                columns: this.params.columns ? this.params.columns : {},
+                columns: this.params.columns ? this.params.columns : [],
                 pagination: this.params.pagination === false ? false : true,
                 pageSize: this.params.pageSize ? this.params.pageSize : 20,
                 pageList: [],
