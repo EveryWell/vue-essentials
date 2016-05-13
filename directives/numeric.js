@@ -5,9 +5,6 @@ Vue.directive('numeric', {
     bind: function () {
         $(this.el).numeric();
     },
-    update: function (value) {
-        $(this.el).val(value)
-    },
     unbind: function () {
         $(this.el).off()
     }

@@ -2,14 +2,12 @@
 Vue.directive('selectize', {
     twoWay: true,
 
-    params: ['tags', 'options', 'settings'],
+    params: ['tags', 'options', 'settings', 'optgroups', 'optgroup-field'],
 
     selectizeSettings: {},
 
     paramWatchers: {
         options: function (options) {
-
-            console.log(options);
 
             var selectize = this.el.selectize,
                 value = this.el.selectize.getValue();
@@ -37,6 +35,7 @@ Vue.directive('selectize', {
         var _self = this;
 
         this.selectizeSettings = {
+            plugins: ['remove_button'],
             onChange: function (value) {
                 _self.set(value);
                 _self.nativeEvent('change').call();
@@ -47,6 +46,14 @@ Vue.directive('selectize', {
 
         if (this.params.options) {
             this.selectizeSettings['options'] = this.params.options;
+        }
+
+        if (this.params.optgroups) {
+            this.selectizeSettings['optgroups'] = this.params.optgroups;
+        }
+
+        if (this.params.optgroupField) {
+            this.selectizeSettings['optgroupField'] = this.params.optgroupField;
         }
 
         if (this.params.tags) {

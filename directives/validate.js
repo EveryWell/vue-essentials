@@ -2,37 +2,18 @@
 Vue.directive('validate', {
     priority: 1000,
 
+    params: ['on-success'],
+
     bind: function () {
 
-        $(this.el).validate({
+        var _self = this;
 
-            highlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+        $.formUtils.LANG = {errorTitle:"Impossibile inviare il modulo!",requiredField:"Campo obbligatorio",requiredFields:"Non sono stati compilati tutti i campi richiesti",badTime:"L'ora scelta non &egrave; valida",badEmail:"Questo indirizzo email non &egrave; valido",badTelephone:"Il numero di telefono imputato non &egrave; valido",badSecurityAnswer:"La risposta alla domanda di sicurezza &egrave; errata",badDate:"La data scelta non &egrave; valida",lengthBadStart:"La sua risposta non può essere più lunga di ",lengthBadEnd:" caratteri",lengthTooLongStart:"La lunghezza della risposta deve essere minore di ",lengthTooShortStart:"La lunghezza della risposta deve essere maggiore di ",notConfirmed:"Los valores proporcionados no pudieron ser confirmados",badDomain:"Il dominio inserito non &egrave; corretto.",badUrl:"L' URL inserito non &egrave; valido",badCustomVal:"I valori inseriti non sono validi",andSpaces:" e spazi ",badInt:"Il numero inserito non &egrave; valido",badSecurityNumber:"Il numero di sicurezza inserito non &egrave; valido",badUKVatAnswer:"La Partita IVA (VAT) inserita non &egrave; valida nel Regno Unito",badStrength:"La password proposta non &egrave; sufficientemente sicura",badNumberOfSelectedOptionsStart:"Deve selezionare almeno",badNumberOfSelectedOptionsEnd:" risposta/e",badAlphaNumeric:"Il valore proposto deve contenere caratteri alfanumerici (a-z e 1234...)",badAlphaNumericExtra:"",wrongFileSize:"Il file che si sta cercando di caricare è troppo grande (massimo %s)",wrongFileType:"Solo i file di tipo %s possono essere inviati",groupCheckedRangeStart:"Si prega di scegliere tra ",groupCheckedTooFewStart:"Si prega di selezionare un minimo di ",groupCheckedTooManyStart:"Si prega di selezionare un massimo di ",groupCheckedEnd:" opzione/i",badCreditCard:"Il numero di carta di credito non risulta valido",badCVV:"CVV non valido",wrongFileDim:"La dimensione dell'immagine non &egrave; valida,",imageTooTall:"il lato alto dell'immagine non può essere maggiore di",imageTooWide:"il lato lungo dell'immagine non può essere maggiore di",imageTooSmall:"L'immagine è troppo piccola",min:"min.",max:"máx.",imageRatioNotAccepted:"La proporzione dell' immagine (altezza x larghezza) non &egrave; valida"};
 
-                $(element).popover('destroy');
-            },
-            errorPlacement: function (error, element) {
-
-                if (typeof $(element).data('bs.popover') == 'undefined' || $(element).data('bs.popover').getContent() != $(error).text()) {
-
-                    $(element).popover({
-                        content: $(error).text(),
-                        placement: 'bottom'
-                    });
-
-                    $(element).popover('show');
-                }
-            },
-            events: 'submit',
-            selector: 'input[type!=submit], select, textarea',
-            callback: function (elem, valid) {
-                if (!valid) {
-                    $(elem).addClass('error');
-                }
-            }
+        $.validate({
+            form: this.el,
+            validateHiddenInputs: true,
+            onSuccess: this.params.onSuccess ? this.params.onSuccess : function($form){}
         });
     },
     update: function (value) {

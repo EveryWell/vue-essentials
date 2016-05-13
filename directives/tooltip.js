@@ -1,12 +1,18 @@
 
 Vue.directive('tooltip', {
-    priority: 1000,
+    priority: 500,
+
+    params: ['title'],
 
     bind: function () {
-        $(this.el).tooltip();
-    },
-    update: function (value) {
-        $(this.el).val(value)
+
+        var tooltipData = {};
+
+        if (this.params.title) {
+            tooltipData.title = this.params.title;
+        }
+
+        $(this.el).tooltip(tooltipData);
     },
     unbind: function () {
         $(this.el).off().tooltip('destroy')
