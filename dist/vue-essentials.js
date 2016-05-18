@@ -16,7 +16,6 @@ require('../directives/slider');
 require('../directives/dirty-form');
 require('../directives/validate');
 require('../directives/fileupload');
-
 },{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/geocomplete":10,"../directives/numeric":11,"../directives/select":12,"../directives/selectize":13,"../directives/slider":14,"../directives/timepicker":15,"../directives/tooltip":16,"../directives/validate":17}],2:[function(require,module,exports){
 
 Vue.directive('autocomplete', {
@@ -253,12 +252,15 @@ Vue.directive('editor', {
     twoWay: true,
     priority: 1000,
 
+    params: ['height'],
+
     bind: function () {
 
         var self = this;
 
         $(this.el).summernote({
-            lang: 'it-IT'
+            lang: 'it-IT',
+            height: this.params.height ? this.params.height: 150
         }).on('summernote.change', function(we, contents, $editable){
             self.set(contents);
         });
