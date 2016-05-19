@@ -3,7 +3,7 @@ Vue.directive('editor', {
     twoWay: true,
     priority: 1000,
 
-    params: ['height'],
+    params: ['placeholder', 'height'],
 
     bind: function () {
 
@@ -11,7 +11,8 @@ Vue.directive('editor', {
 
         $(this.el).summernote({
             lang: 'it-IT',
-            height: this.params.height ? this.params.height: 150
+            height: this.params.height ? this.params.height: 150,
+            placeholder: this.params.placeholder ? this.params.placeholder : ''
         }).on('summernote.change', function(we, contents, $editable){
             self.set(contents);
         });

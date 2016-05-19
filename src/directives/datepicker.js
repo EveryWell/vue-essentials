@@ -13,8 +13,8 @@ Vue.directive('datepicker', {
                 step: this.params.step ? this.params.step : 60,
                 format: this.params.timePicker ? 'd/m/Y H:i' : 'd/m/Y',
                 scrollInput: false/*,
-                defaultDate: new Date(),
-                defaultTime:'05:00'*/
+                 defaultDate: new Date(),
+                 defaultTime:'05:00'*/
             });
     },
     unbind: function () {

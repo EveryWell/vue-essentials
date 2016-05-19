@@ -10,7 +10,6 @@ Vue.directive('select', {
         'options': function() {
 
             var selectOptions = {
-                width: 'resolve',
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
                 allowClear: this.params.allowClear ? this.params.allowClear : true,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
@@ -34,7 +33,6 @@ Vue.directive('select', {
         var self = this;
 
         var selectOptions = {
-            width: 'resolve',
             placeholder: this.params.placeholder ? this.params.placeholder : '',
             allowClear: this.params.allowClear ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
