@@ -194,8 +194,8 @@ Vue.directive('datepicker', {
                 step: this.params.step ? this.params.step : 60,
                 format: this.params.timePicker ? 'd/m/Y H:i' : 'd/m/Y',
                 scrollInput: false/*,
-                defaultDate: new Date(),
-                defaultTime:'05:00'*/
+                 defaultDate: new Date(),
+                 defaultTime:'05:00'*/
             });
     },
     unbind: function () {
@@ -252,7 +252,7 @@ Vue.directive('editor', {
     twoWay: true,
     priority: 1000,
 
-    params: ['height'],
+    params: ['placeholder', 'height'],
 
     bind: function () {
 
@@ -260,7 +260,8 @@ Vue.directive('editor', {
 
         $(this.el).summernote({
             lang: 'it-IT',
-            height: this.params.height ? this.params.height: 150
+            height: this.params.height ? this.params.height: 150,
+            placeholder: this.params.placeholder ? this.params.placeholder : ''
         }).on('summernote.change', function(we, contents, $editable){
             self.set(contents);
         });
@@ -382,7 +383,6 @@ Vue.directive('select', {
         'options': function() {
 
             var selectOptions = {
-                width: 'resolve',
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
                 allowClear: this.params.allowClear ? this.params.allowClear : true,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
@@ -406,7 +406,6 @@ Vue.directive('select', {
         var self = this;
 
         var selectOptions = {
-            width: 'resolve',
             placeholder: this.params.placeholder ? this.params.placeholder : '',
             allowClear: this.params.allowClear ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
@@ -537,7 +536,7 @@ Vue.directive('selectize', {
     nativeEvent: function (eventName) {
         var self = this;
         return function () {
-            var event = new Event(eventName);
+            var event = new CustomEvent(eventName);
             self.el.dispatchEvent(event);
         };
     },

@@ -66,7 +66,7 @@ Vue.directive('selectize', {
     nativeEvent: function (eventName) {
         var self = this;
         return function () {
-            var event = new Event(eventName);
+            var event = new CustomEvent(eventName);
             self.el.dispatchEvent(event);
         };
     },
