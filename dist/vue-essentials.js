@@ -536,7 +536,18 @@ Vue.directive('selectize', {
     nativeEvent: function (eventName) {
         var self = this;
         return function () {
-            var event = new CustomEvent(eventName);
+            // Create the event.
+            var event = document.createEvent('Event');
+
+            // Define that the event name is eventName.
+            event.initEvent(eventName, true, true);
+
+            // Listen for the event.
+            self.el.addEventListener(eventName, function (e) {
+                // e.target matches elem
+            }, false);
+
+            // target can be any Element or other EventTarget.
             self.el.dispatchEvent(event);
         };
     },
