@@ -226,11 +226,13 @@ Vue.directive('dropzone', {
 
     params: ['url', 'addedfile'],
 
+    dropzone: {},
+
     bind: function () {
 
         var _self = this;
 
-        $(this.el).dropzone({
+        this.dropzone = new Dropzone(this.el, {
             url: this.params.url,
             init: function() {
                 if (_self.params.addedfile) {
@@ -238,11 +240,10 @@ Vue.directive('dropzone', {
                 }
             }
         });
-
-
     },
     unbind: function () {
-        $(this.el).off().dropzone('destroy')
+
+        this.dropzone.destroy();
     }
 });
 
