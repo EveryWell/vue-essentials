@@ -12,7 +12,10 @@ Vue.directive('geocomplete', {
         var _self = this;
 
         if (typeof google == 'undefined') {
-            $.getScript("//maps.googleapis.com/maps/api/js?libraries=places", function() {
+
+            var apiKey = Vue.config.googleMapsApiKey ? ('&key=' + Vue.config.googleMapsApiKey) : '';
+
+            $.getScript("//maps.googleapis.com/maps/api/js?libraries=places" + apiKey, function() {
                 _self.initGeocomplete();
             });
         } else {
