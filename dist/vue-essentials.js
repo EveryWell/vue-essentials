@@ -262,6 +262,7 @@ Vue.directive('editor', {
         var simpleToolbar = [
             ['style', ['bold', 'italic', 'underline', 'clear']],
             ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['insert',['link']],
             ['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
