@@ -655,7 +655,7 @@ Vue.directive('tooltip', {
 Vue.directive('validate', {
     priority: 1000,
 
-    params: ['on-success'],
+    params: ['on-success', 'on-error'],
 
     bind: function () {
 
@@ -666,7 +666,8 @@ Vue.directive('validate', {
         $.validate({
             form: this.el,
             validateHiddenInputs: true,
-            onSuccess: this.params.onSuccess ? this.params.onSuccess : function($form){}
+            onSuccess: this.params.onSuccess ? this.params.onSuccess : function($form){},
+            onError: this.params.onError ? this.params.onError : function($form){}
         });
     },
     update: function (value) {
