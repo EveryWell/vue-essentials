@@ -3,16 +3,27 @@ Vue.directive('editor', {
     twoWay: true,
     priority: 1000,
 
-    params: ['placeholder', 'height'],
+    params: ['placeholder', 'height', 'simple-toolbar'],
 
     bind: function () {
 
         var self = this;
 
+        var simpleToolbar = [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['insert',['link']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']]
+        ];
+
         $(this.el).summernote({
             lang: 'it-IT',
             height: this.params.height ? this.params.height: 150,
-            placeholder: this.params.placeholder ? this.params.placeholder : ''
+            placeholder: this.params.placeholder ? this.params.placeholder : '',
+            toolbar: this.params.simpleToolbar ? simpleToolbar : null
         }).on('summernote.change', function(we, contents, $editable){
             self.set(contents);
         });
