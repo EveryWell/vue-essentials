@@ -13,7 +13,19 @@ Vue.directive('geocomplete', {
 
         if (typeof google == 'undefined') {
 
-            var apiKey = Vue.config.googleMapsApiKey ? ('&key=' + Vue.config.googleMapsApiKey) : '';
+            // If another instance is already including Google Maps Library wait 100 ms and try again the binding. (This avoids multiple inclusions of the Maps Library)
+            if (typeof Vue.config.mapsLibrary !== 'undefined') {
+
+                setTimeout(function() {
+                    _self.bind();
+                }, 100);
+
+                return;
+            }
+
+            Vue.config.mapsLibrary = true;
+
+            var apiKey = Vue.config.mapsApiKey ? ('&key=' + Vue.config.mapsApiKey) : '';
 
             $.getScript("//maps.googleapis.com/maps/api/js?libraries=places" + apiKey, function() {
                 _self.initGeocomplete();
