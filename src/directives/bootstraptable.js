@@ -2,9 +2,23 @@
 Vue.directive('bootstraptable', {
     priority: 1000,
 
-    params: ['row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns'],
+    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns'],
 
-    bind: function () {
+    paramWatchers: {
+
+        'url': function() {
+
+            $(this.el).bootstrapTable('destroy');
+
+            this.initTable();
+        }
+    },
+
+    bind: function() {
+        this.init();
+    },
+
+    init: function () {
 
         var _self = this;
 
@@ -31,6 +45,10 @@ Vue.directive('bootstraptable', {
 
         if (this.params.columns) {
             settings.columns = this.params.columns;
+        }
+
+        if (this.params.url) {
+            settings.url = this.params.url;
         }
 
         $(this.el)
