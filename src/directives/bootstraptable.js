@@ -10,7 +10,7 @@ Vue.directive('bootstraptable', {
 
             $(this.el).bootstrapTable('destroy');
 
-            this.initTable();
+            this.init();
         }
     },
 
