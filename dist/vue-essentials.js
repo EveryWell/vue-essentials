@@ -86,6 +86,14 @@ Vue.directive('bootstraptable', {
             }
         };
 
+        if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
+            settings.ajaxOptions = {
+                headers: {
+                    'X-CSRF-TOKEN': Laravel.csrfToken
+                }
+            }
+        }
+        
         if (this.params.columns) {
             settings.columns = this.params.columns;
         }
