@@ -20,13 +20,15 @@ Vue.directive('bootstraptable', {
 
     init: function () {
 
+        var data = $(this.el).data;
+
         var _self = this;
 
         var settings = {
             pagination: this.params.pagination === false ? false : true,
             pageSize: this.params.pageSize ? this.params.pageSize : 20,
             pageList: [],
-            cookie: true,
+            cookie: data.cookieIdTable ? true : false,
             cookieExpire: '24h',
             queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
             rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
