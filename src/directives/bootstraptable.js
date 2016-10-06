@@ -20,7 +20,7 @@ Vue.directive('bootstraptable', {
 
     init: function () {
 
-        var data = $(this.el).data;
+        var data = $(this.el).data();
 
         var _self = this;
 
