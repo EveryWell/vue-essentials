@@ -639,16 +639,18 @@ Vue.directive('slider', {
     twoWay: true,
     priority: 1000,
 
+    params: ['min', 'max', 'default', 'step'],
+
     bind: function () {
 
         var _self = this;
 
         $(this.el).ionRangeSlider({
             type: "single",
-            min: 0,
-            max: 5,
-            from: 0,
-            step: 0.5
+            min: this.params.min,
+            max: this.params.max,
+            from: this.params.default,
+            step: this.params.step
         }).on("change", function () {
 
             var $this = $(this),
