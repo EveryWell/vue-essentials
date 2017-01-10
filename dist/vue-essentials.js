@@ -22,14 +22,14 @@ require('../directives/focus');
 Vue.directive('autocomplete', {
     priority: 1000,
 
-    params: ['available-options'],
+    params: ['available-tags'],
 
     bind: function () {
 
-        this.params.availableOptions = this.params.availableOptions ? JSON.parse(this.params.availableOptions) : [];
+        this.params.availableTags = this.params.availableTags ? this.params.availableTags : [];
 
         $(this.el).autocomplete({
-            source: this.params.availableOptions
+            source: this.params.availableTags
         });
     },
     update: function (value) {
