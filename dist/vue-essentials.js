@@ -476,7 +476,14 @@ Vue.directive('select', {
 
             $(this.el)
                 .select2(selectOptions)
-                .trigger('change');
+                .trigger('change')
+                .on(
+                    'select2:select',(
+                        function(){
+                            $(this).focus();
+                        }
+                    )
+                );
         }
     },
 
@@ -536,7 +543,13 @@ Vue.directive('select', {
                     self.set(this.value);
                 }
 
-            })
+            }).on(
+            'select2:select',(
+                function(){
+                    $(this).focus();
+                }
+            )
+        );
     },
 
     update: function (value) {
