@@ -33,6 +33,11 @@ Vue.directive('number', {
             });
 
     },
+
+    update: function(value) {
+        $(this.el).val(value);
+    },
+
     unbind: function () {
         $(this.el).off().number('destroy');
     }
