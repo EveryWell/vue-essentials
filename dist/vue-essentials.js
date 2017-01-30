@@ -17,7 +17,8 @@ require('../directives/dirty-form');
 require('../directives/validate');
 require('../directives/fileupload');
 require('../directives/focus');
-},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/focus":10,"../directives/geocomplete":11,"../directives/numeric":12,"../directives/select":13,"../directives/selectize":14,"../directives/slider":15,"../directives/timepicker":16,"../directives/tooltip":17,"../directives/validate":18}],2:[function(require,module,exports){
+require('../directives/number');
+},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/focus":10,"../directives/geocomplete":11,"../directives/number":12,"../directives/numeric":13,"../directives/select":14,"../directives/selectize":15,"../directives/slider":16,"../directives/timepicker":17,"../directives/tooltip":18,"../directives/validate":19}],2:[function(require,module,exports){
 
 Vue.directive('autocomplete', {
     priority: 1000,
@@ -446,6 +447,31 @@ Vue.directive('geocomplete', {
 
 },{}],12:[function(require,module,exports){
 
+Vue.directive('number', {
+    priority: 1000,
+
+    params: ['decimals', 'decimals-separator', 'thousands-separator'],
+
+    bind: function () {
+
+        var defaultSettings = {
+            decimals: 0,
+            decimalsSeparator: '.',
+            thousandsSeparator: ','
+        };
+
+        var settings = $.extend(defaultSettings, this.params);
+
+        $(this.el).number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator);
+
+    },
+    unbind: function () {
+        $(this.el).off().number('destroy');
+    }
+});
+
+},{}],13:[function(require,module,exports){
+
 Vue.directive('numeric', {
     priority: 1000,
 
@@ -457,7 +483,7 @@ Vue.directive('numeric', {
     }
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 Vue.directive('select', {
     twoWay: true,
@@ -567,7 +593,7 @@ Vue.directive('select', {
         $(this.el).off().select2('destroy')
     }
 });
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 Vue.directive('selectize', {
     twoWay: true,
@@ -660,7 +686,7 @@ Vue.directive('selectize', {
         this.el.selectize.destroy();
     }
 });
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 Vue.directive('slider', {
     twoWay: true,
@@ -701,7 +727,7 @@ Vue.directive('slider', {
     }
 });
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 Vue.directive('timepicker', {
     priority: 1000,
@@ -726,7 +752,7 @@ Vue.directive('timepicker', {
     }
 });
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 Vue.directive('tooltip', {
     priority: 500,
@@ -748,7 +774,7 @@ Vue.directive('tooltip', {
     }
 });
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 
 Vue.directive('validate', {
     priority: 1000,
