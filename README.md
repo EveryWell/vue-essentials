@@ -6,7 +6,7 @@ Some VueJS essentials directives.
 *Params*
 - decimals: (Optional, Default: 0) The number of decimal places.
 - decimals-separator: (Optional, Default: '.') The decimals separator character.
-- thousands-separator: (Optional, Default: '.') The thousands separator character.
+- thousands-separator: (Optional, Default: ',') The thousands separator character.
 
 ## v-dirty-form
 
