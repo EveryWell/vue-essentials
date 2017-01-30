@@ -1,10 +1,13 @@
 
 Vue.directive('number', {
     priority: 1000,
+    twoWay: true,
 
     params: ['decimals', 'decimals-separator', 'thousands-separator'],
 
     bind: function () {
+
+        var _self = this;
 
         var defaultSettings = {
             decimals: 0,
@@ -14,7 +17,20 @@ Vue.directive('number', {
 
         var settings = $.extend(defaultSettings, this.params);
 
-        $(this.el).number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator);
+        $(this.el)
+            .number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator)
+            .on('input', function() {
+
+                var value = 0;
+
+                if (_self.params.decimals > 0) {
+                    value = parseFloat($(this).val());
+                } else {
+                    value = parseInt($(this).val());
+                }
+
+                _self.set(!isNaN(value) ? value : 0);
+            });
 
     },
     unbind: function () {
