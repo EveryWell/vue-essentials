@@ -584,20 +584,7 @@ Vue.directive('select', {
         $(this.el)
             .select2(selectOptions)
             .on('change', function () {
-
-                if (self.params.multipleSelect) {
-                    var values = [];
-                    for (var option in this.selectedOptions){
-                        if (this.selectedOptions[option].value) {
-                            values.push(this.selectedOptions[option].value);
-                        }
-                    }
-                    self.set(values)
-                } else {
-
-                    self.set(this.value);
-                }
-
+                self.set($(this).val());
             }).on(
             'select2:select',(
                 function(){
