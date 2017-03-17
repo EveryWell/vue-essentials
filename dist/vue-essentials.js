@@ -467,7 +467,7 @@ Vue.directive('number', {
 
         $(this.el)
             .number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator)
-            .on('input', function() {
+            .on('propertychange change click keyup input paste', function() {
 
                 var value = 0;
 
