@@ -3,7 +3,7 @@ Vue.directive('select', {
     twoWay: true,
     priority: 1000,
 
-    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select'],
+    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select', 'tags'],
 
     paramWatchers: {
 
@@ -13,6 +13,7 @@ Vue.directive('select', {
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
                 allowClear: this.params.allowClear ? this.params.allowClear : true,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+                tags: this.params.tags ? this.params.tags : false,
                 language: 'it',
                 data: this.params.options
             };
@@ -43,6 +44,7 @@ Vue.directive('select', {
             placeholder: this.params.placeholder ? this.params.placeholder : '',
             allowClear: this.params.allowClear ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+            tags: this.params.tags ? this.params.tags : false,
             language: 'it'
         };
 
