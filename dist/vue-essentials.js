@@ -268,9 +268,19 @@ Vue.directive('dirty-form', {
 Vue.directive('dropzone', {
     priority: 1000,
 
-    params: ['url', 'addedfile'],
+    params: ['url', 'addedfile', 'max-files', 'upload-multiple'],
 
     dropzone: {},
+
+    paramWatchers: {
+
+        'url': function () {
+
+            this.dropzone.destroy();
+
+            this.bind();
+        }
+    },
 
     bind: function () {
 
@@ -285,6 +295,14 @@ Vue.directive('dropzone', {
             }
         };
 
+        if (this.params.maxFiles) {
+            settings.maxFiles = this.params.maxFiles;
+        }
+
+        if (this.params.uploadMultiple === false) {
+            settings.uploadMultiple = false;
+        }
+
         if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
             settings.headers = {
                 'X-CSRF-TOKEN': Laravel.csrfToken
@@ -298,7 +316,6 @@ Vue.directive('dropzone', {
         this.dropzone.destroy();
     }
 });
-
 },{}],8:[function(require,module,exports){
 
 Vue.directive('editor', {
