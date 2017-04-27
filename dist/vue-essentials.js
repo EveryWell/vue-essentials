@@ -533,17 +533,19 @@ Vue.directive('select', {
 
         'options': function() {
 
+            var allowClear = typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true;
+
             var selectOptions = {
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
-                allowClear: this.params.allowClear ? this.params.allowClear : true,
+                allowClear: allowClear,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
-                tags: this.params.tags ? this.params.tags : false,
+                tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
                 language: 'it',
                 data: this.params.options
             };
 
             $(this.el).html('');
-            if (this.params.allowClear) {
+            if (allowClear) {
                 $(this.el).append('<option></option>')
             }
 
@@ -566,9 +568,9 @@ Vue.directive('select', {
 
         var selectOptions = {
             placeholder: this.params.placeholder ? this.params.placeholder : '',
-            allowClear: this.params.allowClear ? this.params.allowClear : true,
+            allowClear: typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
-            tags: this.params.tags ? this.params.tags : false,
+            tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
             language: 'it'
         };
 
