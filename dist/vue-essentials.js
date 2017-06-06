@@ -669,6 +669,8 @@ Vue.directive('selectize', {
             onBlur: this.nativeEvent('blur').bind(this)
         };
 
+        this.selectizeSettings = $.extend({}, this.selectizeSettings, this.params.settings);
+
         if (this.params.options) {
             this.selectizeSettings['options'] = this.params.options;
         }
