@@ -19,7 +19,7 @@ Vue.directive('number', {
 
         $(this.el)
             .number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator)
-            .on('propertychange change click keyup input paste', function() {
+            .on('propertychange change click keyup input paste focus', function() {
 
                 var value = 0;
 
