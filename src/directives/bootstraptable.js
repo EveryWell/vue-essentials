@@ -2,7 +2,7 @@
 Vue.directive('bootstraptable', {
     priority: 1000,
 
-    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns'],
+    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns', 'locale'],
 
     paramWatchers: {
 
@@ -33,7 +33,7 @@ Vue.directive('bootstraptable', {
             queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
             rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
             detailFormatter: this.params.detailFormatter ? this.params.detailFormatter : function (index, row) { return ''; },
-            locale: 'it-IT',
+            locale: this.params.locale ? this.params.locale : 'it-IT',
             icons: {
                 paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
                 paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
