@@ -2,7 +2,7 @@
 Vue.directive('bootstraptable', {
     priority: 1000,
 
-    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns', 'locale'],
+    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns', 'locale', 'delay'],
 
     paramWatchers: {
 
@@ -15,7 +15,11 @@ Vue.directive('bootstraptable', {
     },
 
     bind: function() {
-        this.init();
+        if (this.params.delay) {
+            setTimeout(function() {
+                this.init();
+            }.bind(this), this.params.delay)
+        }
     },
 
     init: function () {
