@@ -15,11 +15,12 @@ Vue.directive('bootstraptable', {
     },
 
     bind: function() {
-        if (this.params.delay) {
-            setTimeout(function() {
-                this.init();
-            }.bind(this), this.params.delay)
-        }
+
+        var delay = this.params.delay ? this.params.delay : 0;
+
+        setTimeout(function() {
+            this.init();
+        }.bind(this), delay)
     },
 
     init: function () {
