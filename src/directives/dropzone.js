@@ -2,13 +2,20 @@
 Vue.directive('dropzone', {
     priority: 1000,
 
-    params: ['url', 'addedfile', 'max-files', 'upload-multiple'],
+    params: ['url', 'addedfile', 'max-files', 'upload-multiple', 'params', 'on-success'],
 
     dropzone: {},
 
     paramWatchers: {
 
         'url': function () {
+
+            this.dropzone.destroy();
+
+            this.bind();
+        },
+
+        'params': function () {
 
             this.dropzone.destroy();
 
@@ -33,6 +40,10 @@ Vue.directive('dropzone', {
             settings.maxFiles = this.params.maxFiles;
         }
 
+        if (this.params.params) {
+            settings.params = this.params.params;
+        }
+
         if (this.params.uploadMultiple === false) {
             settings.uploadMultiple = false;
         }
@@ -44,6 +55,11 @@ Vue.directive('dropzone', {
         }
 
         this.dropzone = new Dropzone(this.el, settings);
+
+        if (this.params.onSuccess) {
+
+            this.dropzone.on('success', this.params.onSuccess);
+        }
     },
     unbind: function () {
 
