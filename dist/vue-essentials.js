@@ -16,19 +16,21 @@ require('../directives/slider');
 require('../directives/dirty-form');
 require('../directives/validate');
 require('../directives/fileupload');
-},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/geocomplete":10,"../directives/numeric":11,"../directives/select":12,"../directives/selectize":13,"../directives/slider":14,"../directives/timepicker":15,"../directives/tooltip":16,"../directives/validate":17}],2:[function(require,module,exports){
+require('../directives/focus');
+require('../directives/number');
+},{"../directives/autocomplete":2,"../directives/bootstraptable":3,"../directives/calendar":4,"../directives/datepicker":5,"../directives/dirty-form":6,"../directives/dropzone":7,"../directives/editor":8,"../directives/fileupload":9,"../directives/focus":10,"../directives/geocomplete":11,"../directives/number":12,"../directives/numeric":13,"../directives/select":14,"../directives/selectize":15,"../directives/slider":16,"../directives/timepicker":17,"../directives/tooltip":18,"../directives/validate":19}],2:[function(require,module,exports){
 
 Vue.directive('autocomplete', {
     priority: 1000,
 
-    params: ['available-options'],
+    params: ['available-tags'],
 
     bind: function () {
 
-        this.params.availableOptions = this.params.availableOptions ? JSON.parse(this.params.availableOptions) : [];
+        this.params.availableTags = this.params.availableTags ? this.params.availableTags : [];
 
         $(this.el).autocomplete({
-            source: this.params.availableOptions
+            source: this.params.availableTags
         });
     },
     update: function (value) {
@@ -44,9 +46,32 @@ Vue.directive('autocomplete', {
 Vue.directive('bootstraptable', {
     priority: 1000,
 
-    params: ['row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns'],
+    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns', 'locale', 'delay'],
 
-    bind: function () {
+    paramWatchers: {
+
+        'url': function() {
+
+            $(this.el).bootstrapTable('destroy');
+
+            this.init();
+        }
+    },
+
+    bind: function() {
+
+        if (this.params.delay) {
+            setTimeout(function() {
+                this.init();
+            }.bind(this), this.params.delay)
+        } else {
+            this.init();
+        }
+    },
+
+    init: function () {
+
+        var data = $(this.el).data();
 
         var _self = this;
 
@@ -54,12 +79,12 @@ Vue.directive('bootstraptable', {
             pagination: this.params.pagination === false ? false : true,
             pageSize: this.params.pageSize ? this.params.pageSize : 20,
             pageList: [],
-            cookie: true,
+            cookie: data.cookieIdTable ? true : false,
             cookieExpire: '24h',
             queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
             rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
             detailFormatter: this.params.detailFormatter ? this.params.detailFormatter : function (index, row) { return ''; },
-            locale: 'it-IT',
+            locale: this.params.locale ? this.params.locale : 'it-IT',
             icons: {
                 paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
                 paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
@@ -71,8 +96,20 @@ Vue.directive('bootstraptable', {
             }
         };
 
+        if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
+            settings.ajaxOptions = {
+                headers: {
+                    'X-CSRF-TOKEN': Laravel.csrfToken
+                }
+            }
+        }
+        
         if (this.params.columns) {
             settings.columns = this.params.columns;
+        }
+
+        if (this.params.url) {
+            settings.url = this.params.url;
         }
 
         $(this.el)
@@ -183,16 +220,22 @@ Vue.directive('calendar', {
 Vue.directive('datepicker', {
     priority: 1000,
 
-    params: ['time-picker', 'step'],
+    params: ['time-picker', 'step', 'format'],
 
     bind: function () {
+
+        var format = this.params.timePicker ? 'd/m/Y H:i' : 'd/m/Y';
+
+        if (this.params.format) {
+            format = this.params.format;
+        }
 
         $(this.el)
             .datetimepicker({
                 lang: 'it',
                 timepicker: this.params.timePicker ? this.params.timePicker : false,
                 step: this.params.step ? this.params.step : 60,
-                format: this.params.timePicker ? 'd/m/Y H:i' : 'd/m/Y',
+                format: format,
                 scrollInput: false/*,
                  defaultDate: new Date(),
                  defaultTime:'05:00'*/
@@ -208,11 +251,23 @@ Vue.directive('datepicker', {
 Vue.directive('dirty-form', {
     priority: 1000,
 
+    params: ['dirty-form-message', 'delay'],
+
     bind: function () {
 
-        $(this.el).areYouSure({
-            'message': 'Non hai salvato le tue modifiche. Sei sicuro di voler lasciare la pagina?'
-        });
+        var delay = this.params.delay ? this.params.delay : 0;
+
+        if (typeof this.params.dirtyFormMessage == 'undefined') {
+            this.params.dirtyFormMessage = 'Ci sono modifiche non salvate, sei sicuro di lasciare la pagina?';
+        }
+
+        var _self = this;
+
+        setTimeout(function() {
+            $(_self.el).areYouSure({
+                'message': _self.params.dirtyFormMessage
+            });
+        }, delay)
 
     },
     unbind: function () {
@@ -224,29 +279,54 @@ Vue.directive('dirty-form', {
 Vue.directive('dropzone', {
     priority: 1000,
 
-    params: ['url', 'addedfile'],
+    params: ['url', 'addedfile', 'max-files', 'upload-multiple'],
 
     dropzone: {},
+
+    paramWatchers: {
+
+        'url': function () {
+
+            this.dropzone.destroy();
+
+            this.bind();
+        }
+    },
 
     bind: function () {
 
         var _self = this;
 
-        this.dropzone = new Dropzone(this.el, {
+        var settings = {
             url: this.params.url,
             init: function() {
                 if (_self.params.addedfile) {
                     this.on("success", _self.params.addedfile);
                 }
             }
-        });
+        };
+
+        if (this.params.maxFiles) {
+            settings.maxFiles = this.params.maxFiles;
+        }
+
+        if (this.params.uploadMultiple === false) {
+            settings.uploadMultiple = false;
+        }
+
+        if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
+            settings.headers = {
+                'X-CSRF-TOKEN': Laravel.csrfToken
+            }
+        }
+
+        this.dropzone = new Dropzone(this.el, settings);
     },
     unbind: function () {
 
         this.dropzone.destroy();
     }
 });
-
 },{}],8:[function(require,module,exports){
 
 Vue.directive('editor', {
@@ -335,6 +415,15 @@ Vue.directive('fileupload', {
 });
 
 },{}],10:[function(require,module,exports){
+Vue.directive('focus', {
+    bind: function () {
+        var object = this.el;
+        Vue.nextTick(function() {
+            object.focus();
+        });
+    }
+});
+},{}],11:[function(require,module,exports){
 
 Vue.directive('geocomplete', {
     priority: 1000,
@@ -384,7 +473,53 @@ Vue.directive('geocomplete', {
     }
 });
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+
+Vue.directive('number', {
+    priority: 1000,
+    twoWay: true,
+
+    params: ['decimals', 'decimals-separator', 'thousands-separator'],
+
+    bind: function () {
+
+        var _self = this;
+
+        var defaultSettings = {
+            decimals: 0,
+            decimalsSeparator: '.',
+            thousandsSeparator: ','
+        };
+
+        var settings = $.extend(defaultSettings, this.params);
+
+        $(this.el)
+            .number(true, settings.decimals, settings.decimalsSeparator, settings.thousandsSeparator)
+            .on('propertychange change click keyup input paste focus', function() {
+
+                var value = 0;
+
+                if (_self.params.decimals > 0) {
+                    value = parseFloat($(this).val());
+                } else {
+                    value = parseInt($(this).val());
+                }
+
+                _self.set(!isNaN(value) ? value : 0);
+            });
+
+    },
+
+    update: function(value) {
+        $(this.el).val(value);
+    },
+
+    unbind: function () {
+        $(this.el).off().number('destroy');
+    }
+});
+
+},{}],13:[function(require,module,exports){
 
 Vue.directive('numeric', {
     priority: 1000,
@@ -397,34 +532,44 @@ Vue.directive('numeric', {
     }
 });
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 Vue.directive('select', {
     twoWay: true,
     priority: 1000,
 
-    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select'],
+    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select', 'tags'],
 
     paramWatchers: {
 
         'options': function() {
 
+            var allowClear = typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true;
+
             var selectOptions = {
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
-                allowClear: this.params.allowClear ? this.params.allowClear : true,
+                allowClear: allowClear,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+                tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
                 language: 'it',
                 data: this.params.options
             };
 
             $(this.el).html('');
-            if (this.params.allowClear) {
+            if (allowClear) {
                 $(this.el).append('<option></option>')
             }
 
             $(this.el)
                 .select2(selectOptions)
-                .trigger('change');
+                .trigger('change')
+                .on(
+                    'select2:select',(
+                        function(){
+                            $(this).focus();
+                        }
+                    )
+                );
         }
     },
 
@@ -434,8 +579,9 @@ Vue.directive('select', {
 
         var selectOptions = {
             placeholder: this.params.placeholder ? this.params.placeholder : '',
-            allowClear: this.params.allowClear ? this.params.allowClear : true,
+            allowClear: typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+            tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
             language: 'it'
         };
 
@@ -470,21 +616,14 @@ Vue.directive('select', {
         $(this.el)
             .select2(selectOptions)
             .on('change', function () {
-
-                if (self.params.multipleSelect) {
-                    var values = [];
-                    for (var option in this.selectedOptions){
-                        if (this.selectedOptions[option].value) {
-                            values.push(this.selectedOptions[option].value);
-                        }
-                    }
-                    self.set(values)
-                } else {
-
-                    self.set(this.value);
+                self.set($(this).val());
+            }).on(
+            'select2:select',(
+                function(){
+                    $(this).focus();
                 }
-
-            })
+            )
+        );
     },
 
     update: function (value) {
@@ -494,7 +633,7 @@ Vue.directive('select', {
         $(this.el).off().select2('destroy')
     }
 });
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 Vue.directive('selectize', {
     twoWay: true,
@@ -540,6 +679,8 @@ Vue.directive('selectize', {
             onFocus: this.nativeEvent('focus').bind(this),
             onBlur: this.nativeEvent('blur').bind(this)
         };
+
+        this.selectizeSettings = $.extend({}, this.selectizeSettings, this.params.settings);
 
         if (this.params.options) {
             this.selectizeSettings['options'] = this.params.options;
@@ -587,11 +728,13 @@ Vue.directive('selectize', {
         this.el.selectize.destroy();
     }
 });
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 Vue.directive('slider', {
     twoWay: true,
     priority: 1000,
+
+    params: ['min', 'max', 'default', 'step'],
 
     bind: function () {
 
@@ -599,10 +742,10 @@ Vue.directive('slider', {
 
         $(this.el).ionRangeSlider({
             type: "single",
-            min: 0,
-            max: 5,
-            from: 0,
-            step: 0.5
+            min: this.params.min,
+            max: this.params.max,
+            from: this.params.default,
+            step: this.params.step
         }).on("change", function () {
 
             var $this = $(this),
@@ -626,7 +769,7 @@ Vue.directive('slider', {
     }
 });
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 
 Vue.directive('timepicker', {
     priority: 1000,
@@ -651,7 +794,7 @@ Vue.directive('timepicker', {
     }
 });
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 
 Vue.directive('tooltip', {
     priority: 500,
@@ -673,18 +816,22 @@ Vue.directive('tooltip', {
     }
 });
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 
 Vue.directive('validate', {
     priority: 1000,
 
-    params: ['on-success', 'on-error'],
+    params: ['on-success', 'on-error', 'lang'],
 
     bind: function () {
 
         var _self = this;
 
-        $.formUtils.LANG = {errorTitle:"Impossibile inviare il modulo!",requiredField:"Campo obbligatorio",requiredFields:"Non sono stati compilati tutti i campi richiesti",badTime:"L'ora scelta non &egrave; valida",badEmail:"Questo indirizzo email non &egrave; valido",badTelephone:"Il numero di telefono imputato non &egrave; valido",badSecurityAnswer:"La risposta alla domanda di sicurezza &egrave; errata",badDate:"La data scelta non &egrave; valida",lengthBadStart:"La sua risposta non può essere più lunga di ",lengthBadEnd:" caratteri",lengthTooLongStart:"La lunghezza della risposta deve essere minore di ",lengthTooShortStart:"La lunghezza della risposta deve essere maggiore di ",notConfirmed:"Los valores proporcionados no pudieron ser confirmados",badDomain:"Il dominio inserito non &egrave; corretto.",badUrl:"L' URL inserito non &egrave; valido",badCustomVal:"I valori inseriti non sono validi",andSpaces:" e spazi ",badInt:"Il numero inserito non &egrave; valido",badSecurityNumber:"Il numero di sicurezza inserito non &egrave; valido",badUKVatAnswer:"La Partita IVA (VAT) inserita non &egrave; valida nel Regno Unito",badStrength:"La password proposta non &egrave; sufficientemente sicura",badNumberOfSelectedOptionsStart:"Deve selezionare almeno",badNumberOfSelectedOptionsEnd:" risposta/e",badAlphaNumeric:"Il valore proposto deve contenere caratteri alfanumerici (a-z e 1234...)",badAlphaNumericExtra:"",wrongFileSize:"Il file che si sta cercando di caricare è troppo grande (massimo %s)",wrongFileType:"Solo i file di tipo %s possono essere inviati",groupCheckedRangeStart:"Si prega di scegliere tra ",groupCheckedTooFewStart:"Si prega di selezionare un minimo di ",groupCheckedTooManyStart:"Si prega di selezionare un massimo di ",groupCheckedEnd:" opzione/i",badCreditCard:"Il numero di carta di credito non risulta valido",badCVV:"CVV non valido",wrongFileDim:"La dimensione dell'immagine non &egrave; valida,",imageTooTall:"il lato alto dell'immagine non può essere maggiore di",imageTooWide:"il lato lungo dell'immagine non può essere maggiore di",imageTooSmall:"L'immagine è troppo piccola",min:"min.",max:"máx.",imageRatioNotAccepted:"La proporzione dell' immagine (altezza x larghezza) non &egrave; valida"};
+        this.params.lang = this.params.lang ? this.params.lang : 'it';
+
+        if (this.params.lang == 'it') {
+            $.formUtils.LANG = {errorTitle:"Impossibile inviare il modulo!",requiredField:"Campo obbligatorio",requiredFields:"Non sono stati compilati tutti i campi richiesti",badTime:"L'ora scelta non &egrave; valida",badEmail:"Questo indirizzo email non &egrave; valido",badTelephone:"Il numero di telefono imputato non &egrave; valido",badSecurityAnswer:"La risposta alla domanda di sicurezza &egrave; errata",badDate:"La data scelta non &egrave; valida",lengthBadStart:"La sua risposta non può essere più lunga di ",lengthBadEnd:" caratteri",lengthTooLongStart:"La lunghezza della risposta deve essere minore di ",lengthTooShortStart:"La lunghezza della risposta deve essere maggiore di ",notConfirmed:"Los valores proporcionados no pudieron ser confirmados",badDomain:"Il dominio inserito non &egrave; corretto.",badUrl:"L' URL inserito non &egrave; valido",badCustomVal:"I valori inseriti non sono validi",andSpaces:" e spazi ",badInt:"Il numero inserito non &egrave; valido",badSecurityNumber:"Il numero di sicurezza inserito non &egrave; valido",badUKVatAnswer:"La Partita IVA (VAT) inserita non &egrave; valida nel Regno Unito",badStrength:"La password proposta non &egrave; sufficientemente sicura",badNumberOfSelectedOptionsStart:"Deve selezionare almeno",badNumberOfSelectedOptionsEnd:" risposta/e",badAlphaNumeric:"Il valore proposto deve contenere caratteri alfanumerici (a-z e 1234...)",badAlphaNumericExtra:"",wrongFileSize:"Il file che si sta cercando di caricare è troppo grande (massimo %s)",wrongFileType:"Solo i file di tipo %s possono essere inviati",groupCheckedRangeStart:"Si prega di scegliere tra ",groupCheckedTooFewStart:"Si prega di selezionare un minimo di ",groupCheckedTooManyStart:"Si prega di selezionare un massimo di ",groupCheckedEnd:" opzione/i",badCreditCard:"Il numero di carta di credito non risulta valido",badCVV:"CVV non valido",wrongFileDim:"La dimensione dell'immagine non &egrave; valida,",imageTooTall:"il lato alto dell'immagine non può essere maggiore di",imageTooWide:"il lato lungo dell'immagine non può essere maggiore di",imageTooSmall:"L'immagine è troppo piccola",min:"min.",max:"máx.",imageRatioNotAccepted:"La proporzione dell' immagine (altezza x larghezza) non &egrave; valida"};
+        }
 
         $.validate({
             form: this.el,

@@ -3,28 +3,38 @@ Vue.directive('select', {
     twoWay: true,
     priority: 1000,
 
-    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select'],
+    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select', 'tags'],
 
     paramWatchers: {
 
         'options': function() {
 
+            var allowClear = typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true;
+
             var selectOptions = {
                 placeholder: this.params.placeholder ? this.params.placeholder : '',
-                allowClear: this.params.allowClear ? this.params.allowClear : true,
+                allowClear: allowClear,
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+                tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
                 language: 'it',
                 data: this.params.options
             };
 
             $(this.el).html('');
-            if (this.params.allowClear) {
+            if (allowClear) {
                 $(this.el).append('<option></option>')
             }
 
             $(this.el)
                 .select2(selectOptions)
-                .trigger('change');
+                .trigger('change')
+                .on(
+                    'select2:select',(
+                        function(){
+                            $(this).focus();
+                        }
+                    )
+                );
         }
     },
 
@@ -34,8 +44,9 @@ Vue.directive('select', {
 
         var selectOptions = {
             placeholder: this.params.placeholder ? this.params.placeholder : '',
-            allowClear: this.params.allowClear ? this.params.allowClear : true,
+            allowClear: typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
+            tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
             language: 'it'
         };
 
@@ -70,21 +81,14 @@ Vue.directive('select', {
         $(this.el)
             .select2(selectOptions)
             .on('change', function () {
-
-                if (self.params.multipleSelect) {
-                    var values = [];
-                    for (var option in this.selectedOptions){
-                        if (this.selectedOptions[option].value) {
-                            values.push(this.selectedOptions[option].value);
-                        }
-                    }
-                    self.set(values)
-                } else {
-
-                    self.set(this.value);
+                self.set($(this).val());
+            }).on(
+            'select2:select',(
+                function(){
+                    $(this).focus();
                 }
-
-            })
+            )
+        );
     },
 
     update: function (value) {
