@@ -46,7 +46,19 @@ Vue.directive('autocomplete', {
 Vue.directive('bootstraptable', {
     priority: 1000,
 
-    params: ['url', 'row-style', 'query-params', 'detail-formatter', 'pagination', 'on-load-success', 'page-size', 'columns', 'locale', 'delay'],
+    params: [
+        'url',
+        'row-style',
+        'query-params',
+        'detail-formatter',
+        'pagination',
+        'on-load-success',
+        'page-size',
+        'columns',
+        'locale',
+        '',
+        'delay'
+    ],
 
     paramWatchers: {
 
@@ -339,22 +351,25 @@ Vue.directive('editor', {
 
         var self = this;
 
-        var simpleToolbar = [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['insert',['link']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']]
-        ];
-
-        $(this.el).summernote({
+        var settings = {
             lang: 'it-IT',
             height: this.params.height ? this.params.height: 150,
-            placeholder: this.params.placeholder ? this.params.placeholder : '',
-            toolbar: this.params.simpleToolbar ? simpleToolbar : null
-        }).on('summernote.change', function(we, contents, $editable){
+            placeholder: this.params.placeholder ? this.params.placeholder : ''
+        };
+
+        if (this.params.simpleToolbar === true) {
+            settings.toolbar = [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['insert',['link']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ];
+        }
+
+        $(this.el).summernote(settings).on('summernote.change', function(we, contents, $editable){
             self.set(contents);
         });
 
