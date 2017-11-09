@@ -17,6 +17,7 @@ Vue.directive('select', {
                 minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
                 tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
                 language: 'it',
+                multiple: typeof this.params.multipleSelect == 'boolean' ? this.params.multipleSelect : false,
                 data: this.params.options
             };
 
@@ -47,6 +48,7 @@ Vue.directive('select', {
             allowClear: typeof this.params.allowClear == 'boolean' ? this.params.allowClear : true,
             minimumInputLength: this.params.minimumInputLength ? this.params.minimumInputLength : 0,
             tags: typeof this.params.tags == 'boolean' ? this.params.tags : false,
+            multiple: typeof this.params.multipleSelect == 'boolean' ? this.params.multipleSelect : false,
             language: 'it'
         };
 
