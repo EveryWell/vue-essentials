@@ -8,11 +8,11 @@ Vue.directive('bootstraptable', {
         'query-params',
         'detail-formatter',
         'pagination',
+        'side-pagination',
         'on-load-success',
         'page-size',
         'columns',
         'locale',
-        '',
         'delay'
     ],
 
@@ -78,6 +78,10 @@ Vue.directive('bootstraptable', {
 
         if (this.params.url) {
             settings.url = this.params.url;
+        }
+
+        if (this.params.sidePagination){
+            settings.sidePagination = this.params.sidePagination;
         }
 
         $(this.el)
