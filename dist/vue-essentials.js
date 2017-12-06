@@ -50,6 +50,7 @@ Vue.directive('bootstraptable', {
         'url',
         'row-style',
         'query-params',
+        'response-handler',
         'detail-formatter',
         'pagination',
         'side-pagination',
@@ -57,7 +58,8 @@ Vue.directive('bootstraptable', {
         'page-size',
         'columns',
         'locale',
-        'delay'
+        'delay',
+        'eloquent-pagination'
     ],
 
     paramWatchers: {
@@ -94,6 +96,7 @@ Vue.directive('bootstraptable', {
             cookie: data.cookieIdTable ? true : false,
             cookieExpire: '24h',
             queryParams: this.params.queryParams ? this.params.queryParams : function(params) { return params},
+            responseHandler: this.params.responseHandler ? this.params.responseHandler : function (res) { return res},
             rowStyle: this.params.rowStyle ? this.params.rowStyle : function() { return {classes: ''}},
             detailFormatter: this.params.detailFormatter ? this.params.detailFormatter : function (index, row) { return ''; },
             locale: this.params.locale ? this.params.locale : 'it-IT',
@@ -126,6 +129,28 @@ Vue.directive('bootstraptable', {
 
         if (this.params.sidePagination){
             settings.sidePagination = this.params.sidePagination;
+        }
+
+        if (this.params.eloquentPagination) {
+            var queryParamsFunction = settings.queryParams;
+            settings.queryParams = function(params) {
+                var parameters = queryParamsFunction(params);
+
+                parameters.table = 1;
+                parameters.page = parameters.offset == 0 ? 1 : ((parameters.offset / parameters.limit) + 1);
+
+                return parameters;
+            }
+
+            var responseHandlerFunction = settings.responseHandler;
+
+            settings.responseHandler = function(response) {
+                var res = responseHandlerFunction(response);
+
+                res.rows = res.data;
+
+                return res;
+            }
         }
 
         $(this.el)
