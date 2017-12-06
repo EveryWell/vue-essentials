@@ -76,6 +76,12 @@ Vue.directive('select', {
                 },
                 cache: false
             };
+
+            if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
+                selectOptions.ajax['headers'] = {
+                    'X-CSRF-TOKEN': Laravel.csrfToken
+                }
+            }
         }
 
         if (this.params.initialObject) {

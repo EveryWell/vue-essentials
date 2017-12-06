@@ -95,6 +95,10 @@ Vue.directive('bootstraptable', {
                 parameters.table = 1;
                 parameters.page = parameters.offset == 0 ? 1 : ((parameters.offset / parameters.limit) + 1);
 
+                if (isNaN(parameters.page)) {
+                    parameters.page = 1;
+                }
+
                 return parameters;
             }
 

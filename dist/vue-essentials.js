@@ -139,6 +139,10 @@ Vue.directive('bootstraptable', {
                 parameters.table = 1;
                 parameters.page = parameters.offset == 0 ? 1 : ((parameters.offset / parameters.limit) + 1);
 
+                if (isNaN(parameters.page)) {
+                    parameters.page = 1;
+                }
+
                 return parameters;
             }
 
@@ -671,6 +675,12 @@ Vue.directive('select', {
                 },
                 cache: false
             };
+
+            if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
+                selectOptions.ajax['headers'] = {
+                    'X-CSRF-TOKEN': Laravel.csrfToken
+                }
+            }
         }
 
         if (this.params.initialObject) {
