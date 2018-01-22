@@ -602,7 +602,18 @@ Vue.directive('select', {
     twoWay: true,
     priority: 1000,
 
-    params: ['options', 'url', 'placeholder', 'allow-clear', 'minimum-input-length', 'initial-object', 'query-params', 'multiple-select', 'tags'],
+    params: [
+        'options',
+        'url',
+        'process-results',
+        'placeholder',
+        'allow-clear',
+        'minimum-input-length',
+        'initial-object',
+        'query-params',
+        'multiple-select',
+        'tags'
+    ],
 
     paramWatchers: {
 
@@ -675,6 +686,10 @@ Vue.directive('select', {
                 },
                 cache: false
             };
+
+            if (this.params.processResults) {
+                selectOptions.processResults = this.params.processResults
+            }
 
             if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
                 selectOptions.ajax['headers'] = {
