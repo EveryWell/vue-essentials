@@ -89,7 +89,7 @@ Vue.directive('select', {
             };
 
             if (this.params.processResults) {
-                selectOptions.processResults = this.params.processResults
+                selectOptions.ajax.processResults = this.params.processResults
             }
 
             if (typeof Laravel !== 'undefined' && typeof Laravel.csrfToken !== 'undefined') {
