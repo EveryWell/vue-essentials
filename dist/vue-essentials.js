@@ -905,7 +905,12 @@ Vue.directive('tooltip', {
         $(this.el).tooltip(tooltipData);
     },
     unbind: function () {
-        $(this.el).off().tooltip('destroy')
+
+        if ($.fn.tooltip.Constructor.VERSION === '4.0.0') {
+            $(this.el).off().tooltip('dispose')
+        } else {
+            $(this.el).off().tooltip('destroy')
+        }
     }
 });
 
