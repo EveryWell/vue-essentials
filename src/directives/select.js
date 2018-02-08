@@ -54,8 +54,6 @@ Vue.directive('select', {
 
         'url': function() {
 
-            $(this.el).val(null).trigger('change');
-
             this.bind();
         }
     },
