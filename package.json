@@ -1,6 +1,6 @@
 {
   "name": "vue-essentials",
-  "version": "0.1.44",
+  "version": "0.1.45",
   "description": "Some VueJS essentials directives.",
   "main": "dist/vue-essentials.js",
   "scripts": {
