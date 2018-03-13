@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 require('../directives/select');
 require('../directives/datepicker');
 require('../directives/geocomplete');
@@ -265,10 +265,10 @@ Vue.directive('calendar', {
 Vue.directive('datepicker', {
     priority: 1000,
 
-    params: ['time-picker', 'step', 'format'],
+    params: ['time-picker', 'step', 'format', 'disabled-days'],
 
     bind: function () {
-
+        var _self = this;
         var format = this.params.timePicker ? 'd/m/Y H:i' : 'd/m/Y';
 
         if (this.params.format) {
@@ -281,6 +281,9 @@ Vue.directive('datepicker', {
                 timepicker: this.params.timePicker ? this.params.timePicker : false,
                 step: this.params.step ? this.params.step : 60,
                 format: format,
+                beforeShowDay: _self.params.disabledDays
+                    ? function(date){ return [!_self.params.disabledDays.includes(date.getDay()), ""]; }
+                    : true,
                 scrollInput: false/*,
                  defaultDate: new Date(),
                  defaultTime:'05:00'*/
