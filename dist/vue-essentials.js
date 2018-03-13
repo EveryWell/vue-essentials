@@ -282,7 +282,7 @@ Vue.directive('datepicker', {
                 step: this.params.step ? this.params.step : 60,
                 format: format,
                 beforeShowDay: _self.params.disabledDays
-                    ? function(date){ return [!_self.params.disabledDays.includes(date.getDay()),""];}
+                    ? function(date){ return [!_self.params.disabledDays.includes(date.getDay()), ""]; }
                     : true,
                 scrollInput: false/*,
                  defaultDate: new Date(),
