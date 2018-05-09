@@ -2,7 +2,7 @@
 Vue.directive('tooltip', {
     priority: 500,
 
-    params: ['title'],
+    params: ['title', 'html'],
 
     bind: function () {
 
@@ -12,11 +12,17 @@ Vue.directive('tooltip', {
             tooltipData.title = this.params.title;
         }
 
+        if (this.params.html) {
+            tooltipData.html = true;
+        }
+
         $(this.el).tooltip(tooltipData);
     },
     unbind: function () {
 
-        if ($.fn.tooltip.Constructor.VERSION === '4.0.0') {
+        var bootstrapMajorVersion = $.fn.tooltip.Constructor.VERSION.split('.')[0];
+
+        if (bootstrapMajorVersion === '4') {
             $(this.el).off().tooltip('dispose')
         } else {
             $(this.el).off().tooltip('destroy')
