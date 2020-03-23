@@ -3,7 +3,7 @@ Vue.directive('editor', {
     twoWay: true,
     priority: 1000,
 
-    params: ['placeholder', 'height', 'simple-toolbar'],
+    params: ['placeholder', 'height', 'simple-toolbar', 'options'],
 
     bind: function () {
 
@@ -14,6 +14,10 @@ Vue.directive('editor', {
             height: this.params.height ? this.params.height: 150,
             placeholder: this.params.placeholder ? this.params.placeholder : ''
         };
+
+        for (const prop in this.params.options) {
+            settings[prop] = this.params.options[prop];
+        }
 
         if (this.params.simpleToolbar === true) {
             settings.toolbar = [
