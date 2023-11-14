@@ -15,7 +15,7 @@ Vue.directive('editor', {
             placeholder: this.params.placeholder ? this.params.placeholder : ''
         };
 
-        for (const prop in this.params.options) {
+        for (var prop in this.params.options) {
             settings[prop] = this.params.options[prop];
         }
 
