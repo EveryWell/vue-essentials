@@ -13,6 +13,7 @@ Vue.directive('bootstraptable', {
         'on-load-success',
         'page-size',
         'columns',
+        'show-columns',
         'locale',
         'delay',
         'eloquent-pagination'
@@ -47,6 +48,7 @@ Vue.directive('bootstraptable', {
 
         var settings = {
             pagination: this.params.pagination === false ? false : true,
+            showColumns: this.params.showColumns === false ? false : true,
             pageSize: this.params.pageSize ? this.params.pageSize : 20,
             pageList: [],
             cookie: data.cookieIdTable ? true : false,
@@ -61,7 +63,7 @@ Vue.directive('bootstraptable', {
                 paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
                 refresh: 'glyphicon-refresh icon-refresh',
                 toggle: 'glyphicon-list-alt icon-list-alt',
-                columns: 'glyphicon-th icon-th',
+                columns: 'fa fa-columns',
                 detailOpen: 'fa fa-plus fa-lg',
                 detailClose: 'fa fa-minus fa-lg'
             }
