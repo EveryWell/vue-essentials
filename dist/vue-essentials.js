@@ -60,7 +60,14 @@ Vue.directive('bootstraptable', {
         'show-columns',
         'locale',
         'delay',
-        'eloquent-pagination'
+        'eloquent-pagination',
+        'on-load-success',
+        'on-check',
+        'on-check-all',
+        'on-uncheck',
+        'on-uncheck-all',
+        'sticky-header',
+        'checkbox-header',
     ],
 
     paramWatchers: {
@@ -92,7 +99,8 @@ Vue.directive('bootstraptable', {
 
         var settings = {
             pagination: this.params.pagination === false ? false : true,
-            showColumns: this.params.showColumns === false ? false : true,
+            showColumns: data.showColumns,
+            stickyHeader: data.stickyHeader,
             pageSize: this.params.pageSize ? this.params.pageSize : 20,
             pageList: [],
             cookie: data.cookieIdTable ? true : false,
@@ -171,6 +179,22 @@ Vue.directive('bootstraptable', {
 
         if (this.params.onLoadSuccess){
             $(this.el).on('load-success.bs.table', this.params.onLoadSuccess);
+        }
+ 
+        if (typeof this.params.onCheck === 'function'){
+            $(this.el).on('check.bs.table', this.params.onCheck);
+        }
+ 
+        if (typeof this.params.onCheckAll === 'function'){
+            $(this.el).on('check-all.bs.table', this.params.onCheckAll);
+        }
+ 
+        if (typeof this.params.onUncheck === 'function'){
+            $(this.el).on('uncheck.bs.table', this.params.onUncheck);
+        }
+ 
+        if (typeof this.params.onUncheckAll === 'function'){
+            $(this.el).on('uncheck-all.bs.table', this.params.onUncheckAll);
         }
 
         _self.recompile();
