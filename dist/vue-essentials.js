@@ -49,6 +49,7 @@ Vue.directive('bootstraptable', {
     params: [
         'url',
         'row-style',
+        'cell-style',
         'query-params',
         'response-handler',
         'detail-formatter',
@@ -195,6 +196,14 @@ Vue.directive('bootstraptable', {
  
         if (typeof this.params.onUncheckAll === 'function'){
             $(this.el).on('uncheck-all.bs.table', this.params.onUncheckAll);
+        }
+
+        if (this.params.cellStyle) {
+            var cellStyleFunction = this.params.cellStyle
+            $(this.el).bootstrapTable.columnDefaults.cellStyle = function (value, row, index, field) {
+                var cellClasses = cellStyleFunction(value, row, index, field)
+                return cellClasses ? {classes: cellClasses} : {classes: ''}
+            }
         }
 
         _self.recompile();
